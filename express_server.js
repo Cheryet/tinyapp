@@ -59,4 +59,3 @@ const generateRandomString = () => {
   }
   return result;
 }
-
