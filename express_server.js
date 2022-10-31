@@ -1,10 +1,12 @@
-// ~~~ Express Sever Set Up ~~~
+// ~~~ Express Server Set Up ~~~
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
+
+// ~~~ JS Obj acting as Database ~~~
 
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -36,10 +38,10 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
-  console.log('ID:', id)
-  urlDatabase[id] = req.body.longURL
-  console.log('URL DATABASE = ', urlDatabase)
-  res.redirect(`/urls/${id}`)
+  console.log('ID:', id);
+  urlDatabase[id] = req.body.longURL;
+  console.log('URL DATABASE = ', urlDatabase);
+  res.redirect(`/urls/${id}`);
 });
 
 app.get('/urls/:id', (req, res) => {
@@ -49,7 +51,7 @@ app.get('/urls/:id', (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  const longURL = urlDatabase[req.params.id]
+  const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
 
@@ -57,12 +59,14 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+// ~~~ Function to Generate ID's ~~~
+
 const generateRandomString = () => {
   let result = '';
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let charactersLength = characters.length;
-  for ( let i = 0; i < 6; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  for (let i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
