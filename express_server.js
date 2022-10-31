@@ -6,7 +6,7 @@ const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-const urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -35,9 +35,11 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
-  urlDatabase = { asdf :  req.body[longURL]}
+  let id = generateRandomString();
+  console.log('ID:', id)
+  urlDatabase[id] = req.body.longURL
+  console.log('URL DATABASE = ', urlDatabase)
+  res.redirect(`/urls/${id}`)
 });
 
 app.get('/urls/:id', (req, res) => {
@@ -46,15 +48,20 @@ app.get('/urls/:id', (req, res) => {
 
 });
 
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id]
+  res.redirect(longURL);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
 const generateRandomString = () => {
   let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < 5; i++ ) {
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let charactersLength = characters.length;
+  for ( let i = 0; i < 6; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
