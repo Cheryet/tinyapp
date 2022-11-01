@@ -59,7 +59,7 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-// ~~~ Function to Generate ID's ~~~
+// ~~~ Function to Generate Short URL'S ~~~
 
 const generateRandomString = () => {
   let result = '';
