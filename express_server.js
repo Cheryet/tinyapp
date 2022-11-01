@@ -3,21 +3,23 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+
 // ~~~ EJS Template Set Up ~~~
 app.set('view engine', 'ejs');
+
 
 // ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
 
-// ~~~ JS Object Acting as Database ~~~
 
+// ~~~ JS Object Acting as a Database ~~~
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-// ~~~ Routes ~~~
 
+// ~~~ Routes ~~~
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -35,14 +37,14 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
-
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
   res.redirect(`/urls/${id}`);
+});
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
 });
 
 app.get('/urls/:id', (req, res) => {
@@ -70,8 +72,9 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-// ~~~ Function to Generate Short URL'S ~~~
 
+// ~~~ Function to Generate Short URL'S ~~~
+// ~~~   Returns a 6 Character long ID  ~~~
 const generateRandomString = () => {
   let result = '';
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
