@@ -20,11 +20,13 @@
     </div>
   <%  if (username) {  %>
     <h4>Welcome, <%=username%>! </h4>
-    <button type="submit" class="btn btn-outline-dark">Log Out</button>
+    <form action="/logout" method="POST">
+      <button type="submit" class="btn btn-outline-dark">Logout</button>
+    </form>
   <%  } else {  %>
       <form action="/login" method="POST">
-        <button type="submit" class="btn btn-outline-dark">Log In</button>
         <input name='username' type="text" value="">
+        <button type="submit" class="btn btn-outline-dark">Login</button>
       </form>
     <% } %>
   </nav>
