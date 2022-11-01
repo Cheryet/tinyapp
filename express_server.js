@@ -3,10 +3,13 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+// ~~~ EJS Template Set Up ~~~
 app.set('view engine', 'ejs');
+
+// ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
 
-// ~~~ JS Obj acting as Database ~~~
+// ~~~ JS Object Acting as Database ~~~
 
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
