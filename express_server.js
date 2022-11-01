@@ -9,8 +9,10 @@ const cookieParser = require('cookie-parser');
 app.set('view engine', 'ejs');
 
 
+
 // ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
 
 // ~~~ JS Object Acting as a Database ~~~
@@ -34,7 +36,7 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = {urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies['username'] };
   res.render('urls_index', templateVars);
 });
 
@@ -45,11 +47,14 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = {
+    username: req.cookies['username']
+  }
+  res.render("urls_new", templateVars);
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id]  };
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies['username']  };
   res.render('urls_show', templateVars);
 });
 
@@ -69,10 +74,8 @@ app.get("/u/:id", (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  console.log(req.body.username)
   res.cookie('username', req.body.username)
   res.redirect('/urls')
-
 })
 
 
