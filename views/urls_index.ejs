@@ -17,6 +17,11 @@
   <%- include ('partials/_header') %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
+      <% if (!user) {%>
+        <h5>Please login or create and account to see your URLS</h5>
+        <a href="/login" class="btn btn-primary">Login</a>
+        <a href="/register" class="btn btn-primary">Create Account</a>
+      <%} else { %>
       <table class="table">
         <thead>
           <tr>
@@ -43,6 +48,7 @@
           <% } %>
         </tbody>
       </table>
+      <%}%>
     </main>
     <!-- Bootstrap JS -->
     <script
