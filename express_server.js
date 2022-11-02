@@ -100,9 +100,9 @@ app.post('/login', (req, res) => {
   if (!correctPassword(req.body.email, req.body.password)){
     return res.status(403).send('Error 403, Invaild Email or Password')
   }
-
-  res.cookie('user_id', getIDFromEmail(req.body.email))
-  res.redirect('urls')
+  const user_id = getIDFromEmail(req.body.email)
+  res.cookie('user_id', users[user_id])
+  res.redirect('/urls')
 });
 
 app.post('/logout', (req, res) => {
@@ -132,7 +132,7 @@ app.post('/register', (req, res) => {
     email: req.body.email,
     password: req.body.password
   };
-  console.log(users);
+
   res.cookie('user_id', users[id]);
   res.redirect('/urls');
 });
@@ -142,7 +142,10 @@ app.listen(PORT, () => {
   console.log(`TinyApp listening on port ${PORT}!`);
 });
 
+
+
 // ~~~ Functions ~~~
+
 
 // ~~~       Generate Short URL'S       ~~~
 // ~~~   Returns a 6 Character long ID  ~~~
