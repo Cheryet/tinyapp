@@ -36,16 +36,9 @@ let users = {
 
 
 // ~~~ Routes ~~~
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 app.get('/urls.json', (req,res) => {
   res.json(urlDatabase);
-});
-
-app.get('/hello', (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get('/urls', (req, res) => {
@@ -99,6 +92,16 @@ app.post('/logout', (req, res) => {
 app.get('/register', (req, res) => {
 
 res.render('urls_register')
+});
+
+app.post('/register', (req, res) => {
+  let id = 'ID'+generateRandomString();
+  users[id] = {
+    id: id, 
+    email: req.body.email,
+    password: req.body.password
+  }
+
 })
 
 
