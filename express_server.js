@@ -86,6 +86,9 @@ app.get('/urls/:id', (req, res) => {
 });
 
 app.post('/urls/:id', (req, res) => {
+  if (!req.cookies['user_id']){
+    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL")
+  }
   if (urlDatabase[req.params.id].userID !== req.cookies['user_id'].id){
     res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>")
   }
@@ -94,6 +97,12 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/urls/:id/delete', (req, res) => {
+  if (!req.cookies['user_id']){
+    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL")
+  }
+  if (urlDatabase[req.params.id].userID !== req.cookies['user_id'].id){
+    res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>")
+  }
   delete urlDatabase[req.params.id];
   res.redirect('/urls');
 });
