@@ -100,13 +100,13 @@ app.post('/login', (req, res) => {
     return res.status(403).send('Error 403, Invaild Email or Password')
   }
 
-  res.cookie('user_id', )
+  res.cookie('user_id', getIDFromEmail(req.body.email))
+  res.redirect('urls')
 
-  
-  
 });
 
 app.post('/logout', (req, res) => {
+  
   
 });
 
@@ -140,8 +140,9 @@ app.listen(PORT, () => {
   console.log(`TinyApp listening on port ${PORT}!`);
 });
 
+// ~~~ Functions ~~~
 
-// ~~~ Function to Generate Short URL'S ~~~
+// ~~~       Generate Short URL'S       ~~~
 // ~~~   Returns a 6 Character long ID  ~~~
 const generateRandomString = () => {
   let result = '';
@@ -153,8 +154,7 @@ const generateRandomString = () => {
   return result;
 };
 
-// ~~~    Function to check if Email exists    ~~~
-// ~~~           in users Object.              ~~~
+// ~~~ checks if email exists in users Object  ~~~
 // ~~~ email = req.body.email | object = users ~~~
 const emailExists = (email, object) => {
   for (let key in object) {
@@ -183,11 +183,11 @@ const correctPassword = (email, password) => {
 //~~~        email = req.body.email        ~~~
 const getIDFromEmail = (email) => {
   for (const user_id in users) {
-    if (users[user_id].email){
+    if (users[user_id].email === email){
       return user_id;
     }
   }
-}
+};
 
 
 
