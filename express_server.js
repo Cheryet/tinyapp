@@ -54,7 +54,7 @@ app.get('/urls', (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (!req.cookies['user_id']){
-    res.send('<p>Please Login to create a shortened URL</p>')
+    res.send(alert('Please Login to create a short URL'))
   }
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
@@ -85,7 +85,9 @@ app.post('/urls/:id/delete', (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  if ()
+  if (!shortURLExists(req.params.id)){
+    res.send(alert('Short Url does not exist'))
+  }
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
@@ -206,6 +208,7 @@ const getIDFromEmail = (email) => {
   }
 };
 
+// ~~~ Function to check if shortURl exists  ~~~
 const shortURLExists = (shortURL) => {
   for (const key in urlDatabase){
     if (key !== shortURL){
