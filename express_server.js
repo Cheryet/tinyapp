@@ -93,8 +93,14 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
 
   if (!emailExists(req.body.email, users)){
-    res.status(403).send('Error 403, Invaild Email or Password')
+    return res.status(403).send('Error 403, Invaild Email or Password')
   }
+
+  if (!correctPassword(req.body.email, req.body.password)){
+    return res.status(403).send('Error 403, Invaild Email or Password')
+  }
+
+  res.cookie('user_id', )
 
   
   
@@ -172,4 +178,16 @@ const correctPassword = (email, password) => {
   }
   return false;
 }
+
+// ~~~ Function to get user_id from email  ~~~
+//~~~        email = req.body.email        ~~~
+const getIDFromEmail = (email) => {
+  for (const user_id in users) {
+    if (users[user_id].email){
+      return user_id;
+    }
+  }
+}
+
+
 
