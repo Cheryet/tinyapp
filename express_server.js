@@ -95,14 +95,16 @@ res.render('urls_register')
 });
 
 app.post('/register', (req, res) => {
-  let id = 'ID'+generateRandomString();
+  let id = 'ID' + generateRandomString();
   users[id] = {
     id: id, 
     email: req.body.email,
     password: req.body.password
-  }
-
-})
+  };
+  console.log(users)
+  res.cookie('user_id', req.body.username)
+  res.redirect('/urls')
+});
 
 
 app.listen(PORT, () => {
