@@ -95,6 +95,9 @@ res.render('urls_register', users)
 });
 
 app.post('/register', (req, res) => {
+  if (req.body.email === '' || req.body.password === ''){
+    res.status
+  }
   let id = 'ID' + generateRandomString();
   users[id] = {
     id: id, 
@@ -123,3 +126,15 @@ const generateRandomString = () => {
   }
   return result;
 };
+
+// ~~~    Function to check if Email exists    ~~~
+// ~~~           In users Object.              ~~~
+// ~~~ email = req.body.email | object = users ~~~
+
+const emailExists = (email, object) => {
+  for (let key in object) {
+    if (object[key].email === email) {
+      return false
+    }
+  }
+}
