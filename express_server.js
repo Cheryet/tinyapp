@@ -56,7 +56,6 @@ app.get('/urls.json', (req,res) => {
 app.get('/urls', (req, res) => {
   const userURLS = urlsForUser(req.cookies['user_id'].id);
   const templateVars = { urls: userURLS, user: req.cookies['user_id'] };
-  console.log('Url Database: ', urlDatabase)
   res.render('urls_index', templateVars);
 });
 
@@ -79,11 +78,17 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
+  if (!req.cookies['user_id']) {
+    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
+  }
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id].longURL, user: req.cookies['user_id']  };
   res.render('urls_show', templateVars);
 });
 
 app.post('/urls/:id', (req, res) => {
+  if (urlDatabase[req.params.id].userID !== req.cookies['user_id'].id){
+    res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>")
+  }
   urlDatabase[req.params.id].longURL = req.body.newLongURL;
   res.redirect('/urls');
 });
@@ -239,8 +244,7 @@ const urlsForUser = (id) => {
         num: {
           shortURL: shortURL,
           longURL: urlDatabase[shortURL].longURL
-        }
-        
+        }  
       }
     }
   }
