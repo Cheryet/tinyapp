@@ -95,8 +95,8 @@ res.render('urls_register', users)
 });
 
 app.post('/register', (req, res) => {
-  if (req.body.email === '' || req.body.password === ''){
-    res.status
+  if (req.body.email === '' || req.body.password === '' || emailExists(req.body.email, users)){
+    res.status(400).send('400 Error')
   }
   let id = 'ID' + generateRandomString();
   users[id] = {
@@ -134,7 +134,8 @@ const generateRandomString = () => {
 const emailExists = (email, object) => {
   for (let key in object) {
     if (object[key].email === email) {
-      return false
+      return true;
     }
   }
+  return false;
 }
