@@ -3,19 +3,25 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
+//cosnt morgan = require('morgan')
 
 
 // ~~~ EJS Template Set Up ~~~
 app.set('view engine', 'ejs');
 
 
-
 // ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+//app.use(morgan('dev'))
+
+
+//Install Morgan - Morgan is a tracker & logger (npm i morgan)
+
 
 
 // ~~~ JS Objects Acting as a Database ~~~
+
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -85,12 +91,17 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect('/urls');
+
+  if (!emailExists(req.body.email, users)){
+    res.status(403).send('Error 403, Invaild Email or Password')
+  }
+
+  
+  
 });
 
 app.post('/logout', (req, res) => {
-  ;
+  
 });
 
 app.get('/register', (req, res) => {
@@ -120,7 +131,7 @@ app.post('/register', (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`TinyApp listening on port ${PORT}!`);
 });
 
 
@@ -139,7 +150,6 @@ const generateRandomString = () => {
 // ~~~    Function to check if Email exists    ~~~
 // ~~~           in users Object.              ~~~
 // ~~~ email = req.body.email | object = users ~~~
-
 const emailExists = (email, object) => {
   for (let key in object) {
     if (object[key].email === email) {
@@ -148,3 +158,18 @@ const emailExists = (email, object) => {
   }
   return false;
 };
+
+// ~~~          Function to check if Password exists         ~~~
+// ~~~                      in users Object.                 ~~~
+// ~~~ password = req.body.password | email = req.body.email ~~~
+const correctPassword = (email, password) => {
+  for (const user_id in users){
+    if (users[user_id].email === email){
+      if (users[user_id].password = password){
+        return true;
+      }  
+    }
+  }
+  return false;
+}
+
