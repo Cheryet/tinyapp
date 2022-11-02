@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 
 // ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 
 
 // ~~~ JS Objects Acting as a Database ~~~
@@ -55,7 +55,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     user: req.cookies['user_id']
-  }
+  };
   res.render("urls_new", templateVars);
 });
 
@@ -65,58 +65,58 @@ app.get('/urls/:id', (req, res) => {
 });
 
 app.post('/urls/:id', (req, res) => {
-  urlDatabase[req.params.id] = req.body.newLongURL
-  res.redirect('/urls')
-})
+  urlDatabase[req.params.id] = req.body.newLongURL;
+  res.redirect('/urls');
+});
 
 app.post('/urls/:id/delete', (req, res) => {
-  delete urlDatabase[req.params.id]
-  res.redirect('/urls')
-})
+  delete urlDatabase[req.params.id];
+  res.redirect('/urls');
+});
 
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
 
-app.get('/login', (req,res) => {
-  res.render('urls_login')
+app.get('/login', (req, res) => {
+  res.render('urls_login');
 
-})
+});
 
 app.post('/login', (req, res) => {
-  res.cookie('username', req.body.username)
-  res.redirect('/urls')
-})
+  res.cookie('username', req.body.username);
+  res.redirect('/urls');
+});
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username')
-  res.redirect('/urls')
-})
+  res.clearCookie('username');
+  res.redirect('/urls');
+});
 
 app.get('/register', (req, res) => {
-  res.render('urls_register', users)
+  res.render('urls_register', users);
 });
 
 app.post('/register', (req, res) => {
 
-  if (req.body.email === '' || req.body.password === ''){
-    res.status(400).send('400 Error, Please enter vaild login credentials')
+  if (req.body.email === '' || req.body.password === '') {
+    res.status(400).send('400 Error, Please enter vaild login credentials');
   }
 
   if (emailExists(req.body.email, users)) {
-    res.status(400).send('400 Error, Email already exists')
+    res.status(400).send('400 Error, Email already exists');
   }
 
   let id = 'ID' + generateRandomString();
   users[id] = {
-    id: id, 
+    id: id,
     email: req.body.email,
     password: req.body.password
   };
-  console.log(users)
-  res.cookie('user_id', users[id])
-  res.redirect('/urls')
+  console.log(users);
+  res.cookie('user_id', users[id]);
+  res.redirect('/urls');
 });
 
 
@@ -148,4 +148,4 @@ const emailExists = (email, object) => {
     }
   }
   return false;
-}
+};
