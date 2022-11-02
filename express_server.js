@@ -54,7 +54,9 @@ app.get('/urls.json', (req,res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase, user: req.cookies['user_id'] };
+  const userURLS = urlsForUser(req.cookies['user_id'].id);
+  const templateVars = { urls: userURLS, user: req.cookies['user_id'] };
+  console.log('Url Database: ', urlDatabase)
   res.render('urls_index', templateVars);
 });
 
@@ -63,7 +65,7 @@ app.post("/urls", (req, res) => {
     res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
   }
   let id = generateRandomString();
-  urlDatabase[id] = { longURL: req.body.longURL, userID: req.cookies['user_id'] }
+  urlDatabase[id] = { longURL: req.body.longURL, userID: req.cookies['user_id'].id }
   res.redirect(`/urls/${id}`);
 });
 
@@ -191,7 +193,7 @@ const emailExists = (email, object) => {
   return false;
 };
 
-// ~~~          Function to check if Password exists         ~~~
+// ~~~          Functn to check if Password exists         ~~~
 // ~~~                      in users Object.                 ~~~
 // ~~~ password = req.body.password | email = req.body.email ~~~
 const correctPassword = (email, password) => {
@@ -223,6 +225,26 @@ const shortURLExists = (shortURL) => {
     }
   }
   return false;
+}
+
+
+const urlsForUser = (id) => {
+  let results = {};
+  let num = 0;
+
+  for (const shortURL in urlDatabase){
+    num++
+    if (urlDatabase[shortURL].userID === id) {
+      results = {
+        num: {
+          shortURL: shortURL,
+          longURL: urlDatabase[shortURL].longURL
+        }
+        
+      }
+    }
+  }
+  return results;
 }
 
 
