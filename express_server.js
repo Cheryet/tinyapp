@@ -79,6 +79,11 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
+app.get('/login', (req,res) => {
+  res.render('urls_login')
+
+})
+
 app.post('/login', (req, res) => {
   res.cookie('username', req.body.username)
   res.redirect('/urls')
@@ -90,14 +95,19 @@ app.post('/logout', (req, res) => {
 })
 
 app.get('/register', (req, res) => {
-
-res.render('urls_register', users)
+  res.render('urls_register', users)
 });
 
 app.post('/register', (req, res) => {
-  if (req.body.email === '' || req.body.password === '' || emailExists(req.body.email, users)){
-    res.status(400).send('400 Error')
+
+  if (req.body.email === '' || req.body.password === ''){
+    res.status(400).send('400 Error, Please enter vaild login credentials')
   }
+
+  if (emailExists(req.body.email, users)) {
+    res.status(400).send('400 Error, Email already exists')
+  }
+
   let id = 'ID' + generateRandomString();
   users[id] = {
     id: id, 
@@ -128,7 +138,7 @@ const generateRandomString = () => {
 };
 
 // ~~~    Function to check if Email exists    ~~~
-// ~~~           In users Object.              ~~~
+// ~~~           in users Object.              ~~~
 // ~~~ email = req.body.email | object = users ~~~
 
 const emailExists = (email, object) => {
