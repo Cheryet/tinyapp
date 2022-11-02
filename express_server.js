@@ -15,10 +15,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 
-// ~~~ JS Object Acting as a Database ~~~
+// ~~~ JS Objects Acting as a Database ~~~
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+};
+
+let users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
 };
 
 
@@ -81,6 +94,11 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   res.clearCookie('username')
   res.redirect('/urls')
+})
+
+app.get('/register', (req, res) => {
+
+res.render('urls_register')
 })
 
 
