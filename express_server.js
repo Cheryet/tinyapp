@@ -23,8 +23,14 @@ app.use(cookieParser());
 // ~~~ JS Objects Acting as a Database ~~~
 
 let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL : "http://www.lighthouselabs.ca", 
+    userID: "aJ48lW"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "aJ48lW"
+  }
 };
 
 let users = {
@@ -57,7 +63,7 @@ app.post("/urls", (req, res) => {
     res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
   }
   let id = generateRandomString();
-  urlDatabase[id] = req.body.longURL;
+  urlDatabase[id] = { longURL: req.body.longURL, userID: req.cookies['user_id'] }
   res.redirect(`/urls/${id}`);
 });
 
@@ -71,12 +77,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], user: req.cookies['user_id']  };
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id].longURL, user: req.cookies['user_id']  };
   res.render('urls_show', templateVars);
 });
 
 app.post('/urls/:id', (req, res) => {
-  urlDatabase[req.params.id] = req.body.newLongURL;
+  urlDatabase[req.params.id].longURL = req.body.newLongURL;
   res.redirect('/urls');
 });
 
@@ -89,7 +95,7 @@ app.get("/u/:id", (req, res) => {
   if (!shortURLExists(req.params.id)){
     res.send("Short Url does not exist, <a href='/urls'>Go back</a>")
   }
-  const longURL = urlDatabase[req.params.id];
+  const longURL = urlDatabase[req.params.id].longURL;
   res.redirect(longURL);
 });
 
