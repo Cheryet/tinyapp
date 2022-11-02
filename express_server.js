@@ -54,7 +54,7 @@ app.get('/urls', (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (!req.cookies['user_id']){
-    res.send(alert('Please Login to create a short URL'))
+    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
   }
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
@@ -63,6 +63,7 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   if (!req.cookies['user_id']){
+    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
     res.redirect('/urls')
   }
   const templateVars = { user: req.cookies['user_id'] };
@@ -86,7 +87,7 @@ app.post('/urls/:id/delete', (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   if (!shortURLExists(req.params.id)){
-    res.send(alert('Short Url does not exist'))
+    res.send("Short Url does not exist, <a href='/urls'>Go back</a>")
   }
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
@@ -105,11 +106,11 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
 
   if (!emailExists(req.body.email, users)){
-    return res.status(403).send('Error 403, Invaild Email or Password')
+    return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>")
   }
 
   if (!correctPassword(req.body.email, req.body.password)){
-    return res.status(403).send('Error 403, Invaild Email or Password')
+    return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>")
   }
   const user_id = getIDFromEmail(req.body.email)
   res.cookie('user_id', users[user_id])
@@ -133,11 +134,11 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
 
   if (req.body.email === '' || req.body.password === '') {
-    res.status(400).send('400 Error, Please enter vaild login credentials');
+    res.status(400).send("400 Error, Please enter vaild login credentials, <a href='/login'>Go back</a>");
   }
 
   if (emailExists(req.body.email, users)) {
-    res.status(400).send('400 Error, Email already exists');
+    res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
   }
 
   let id = 'ID' + generateRandomString();
@@ -211,11 +212,11 @@ const getIDFromEmail = (email) => {
 // ~~~ Function to check if shortURl exists  ~~~
 const shortURLExists = (shortURL) => {
   for (const key in urlDatabase){
-    if (key !== shortURL){
-      return false
+    if (key === shortURL){
+      return true
     }
   }
-  return true;
+  return false;
 }
 
 
