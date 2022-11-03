@@ -79,7 +79,7 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
-    res.redirect('/urls');
+    res.redirect('/login');
   }
   const templateVars = { user: req.session.user_id };
   res.render("urls_new", templateVars);
@@ -157,7 +157,7 @@ app.get('/register', (req, res) => {
   if (req.session.user_id) {
     res.redirect('/urls');
   }
-  
+
   const templateVars = { user: req.session.user_id };
   res.render('urls_register', templateVars);
 });
@@ -183,6 +183,10 @@ app.post('/register', (req, res) => {
 
   req.session.user_id = users[id];
   res.redirect('/urls');
+});
+
+app.get('*', (req, res) => {
+  res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
 });
 
 
