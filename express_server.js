@@ -144,7 +144,7 @@ app.post('/login', (req, res) => {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
   const user_id = getIDFromEmail(req.body.email);
-  req.session.user_id = users[user_id].id;
+  req.session.user_id = users[user_id];
   res.redirect('/urls');
 });
 
