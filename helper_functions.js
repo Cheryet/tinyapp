@@ -2,6 +2,8 @@
 //| ~~ Functions for express_server.js ~~ |
 //-----------------------------------------
 
+const bcrypt = require('bcryptjs');
+
 
 // ~~~       Generate Short URL'S       ~~~
 // ~~~   Returns a 6 Character long ID  ~~~
@@ -33,10 +35,10 @@ const emailExists = (email, object) => {
 // ~~~       Checks if Password exists in users object       ~~~
 // ~~~ password = req.body.password | email = req.body.email ~~~
 
-const correctPassword = (email, password) => {
-  for (const user_id in users) {
-    if (users[user_id].email === email) {
-      if (bcrypt.compareSync(password, users[user_id].password)) {
+const correctPassword = (email, password, object) => {
+  for (const user_id in object) {
+    if (object[user_id].email === email) {
+      if (bcrypt.compareSync(password, object[user_id].password)) {
         return true;
       }
     }
