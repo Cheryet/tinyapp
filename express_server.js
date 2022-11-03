@@ -63,7 +63,7 @@ app.get('/urls', (req, res) => {
     const templateVars = {user: false};
     return res.render('urls_index', templateVars);
   }
-  const userURLS = urlsForUser(req.session.user_id.id);
+  const userURLS = urlsForUser(req.session.user_id.id, urlDatabase);
   const templateVars = { urls: userURLS, user: req.session.user_id };
   res.render('urls_index', templateVars);
 });
@@ -116,7 +116,7 @@ app.post('/urls/:id/delete', (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  if (!shortURLExists(req.params.id)) {
+  if (!shortURLExists(req.params.id, urlDatabase)) {
     res.send("Short Url does not exist, <a href='/urls'>Go back</a>");
   }
   const longURL = urlDatabase[req.params.id].longURL;

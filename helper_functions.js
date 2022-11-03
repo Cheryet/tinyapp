@@ -57,8 +57,8 @@ const getIDFromEmail = (email, object) => {
 
 
 // ~~~ Checks if Short URL exists already  ~~~
-const shortURLExists = (shortURL) => {
-  for (const key in urlDatabase) {
+const shortURLExists = (shortURL, object) => {
+  for (const key in object) {
     if (key === shortURL) {
       return true;
     }
@@ -68,14 +68,14 @@ const shortURLExists = (shortURL) => {
 
 
 // ~~~ Returns URL's specific to that user ~~~
-const urlsForUser = (id) => {
+const urlsForUser = (id, object) => {
   
   let results = {
   };
 
-  for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      results[shortURL] = urlDatabase[shortURL].longURL;
+  for (const shortURL in object) {
+    if (object[shortURL].userID === id) {
+      results[shortURL] = object[shortURL].longURL;
     }
   }
   return results;
