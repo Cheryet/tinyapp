@@ -6,7 +6,7 @@ const { correctPassword } = require('./helper_functions');
 const { emailExists } = require('./helper_functions');
 const { generateRandomString } = require('./helper_functions');
 
-// ~~~ Express Server Set Up ~~~
+// ~~~ Dependancies ~~~
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -134,11 +134,9 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-
   if (!emailExists(req.body.email, users)) {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
-
   if (!correctPassword(req.body.email, req.body.password, users)) {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
@@ -157,20 +155,18 @@ app.get('/register', (req, res) => {
   if (req.session.user_id) {
     res.redirect('/urls');
   }
-
   const templateVars = { user: req.session.user_id };
   res.render('urls_register', templateVars);
 });
 
 app.post('/register', (req, res) => {
-
   if (req.body.email === '' || req.body.password === '') {
     res.status(400).send("400 Error, Please enter vaild login credentials, <a href='/login'>Go back</a>");
   }
-
   if (emailExists(req.body.email, users)) {
     res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
   }
+
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
   const id = 'ID' + generateRandomString();
@@ -188,7 +184,6 @@ app.post('/register', (req, res) => {
 app.get('*', (req, res) => {
   res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
 });
-
 
 app.listen(PORT, () => {
   console.log(`TinyApp listening on port ${PORT}!`);
