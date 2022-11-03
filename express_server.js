@@ -1,10 +1,10 @@
 // ~~~ Import Functions from helper_functions.js ~~
-const urlsForUser = require('./helper_functionsß')
-const shortURLExists = require('./helper_functionsß')
-const getIDFromEmail = require('./helper_functionsß')
-const correctPassword = require('./helper_functionsß')
-const emailExists = require('./helper_functionsß')
-const generateRandomString = require('./helper_functionsß')
+const urlsForUser = require('./helper_functions')
+const shortURLExists = require('./helper_functions')
+const getIDFromEmail = require('./helper_functions')
+const correctPassword = require('./helper_functions')
+const emailExists = require('./helper_functions')
+const generateRandomString = require('./helper_functions')
 
 // ~~~ Express Server Set Up ~~~
 const express = require("express");
