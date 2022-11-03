@@ -1,3 +1,11 @@
+// ~~~ Import Functions from helper_functions.js ~~
+const urlsForUser = require('./helper_functionsß')
+const shortURLExists = require('./helper_functionsß')
+const getIDFromEmail = require('./helper_functionsß')
+const correctPassword = require('./helper_functionsß')
+const emailExists = require('./helper_functionsß')
+const generateRandomString = require('./helper_functionsß')
+
 // ~~~ Express Server Set Up ~~~
 const express = require("express");
 const app = express();
@@ -5,7 +13,6 @@ const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const cookieSession = require('cookie-session');
-//cosnt morgan = require('morgan')
 
 
 // ~~~ EJS Template Set Up ~~~
@@ -19,10 +26,6 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
 }));
-//app.use(morgan('dev'))
-
-
-//Install Morgan - Morgan is a tracker & logger (npm i morgan)
 
 
 
@@ -189,82 +192,6 @@ app.post('/register', (req, res) => {
 app.listen(PORT, () => {
   console.log(`TinyApp listening on port ${PORT}!`);
 });
-
-
-
-// ~~~ Functions ~~~
-
-
-// ~~~       Generate Short URL'S       ~~~
-// ~~~   Returns a 6 Character long ID  ~~~
-const generateRandomString = () => {
-  let result = '';
-  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let charactersLength = characters.length;
-  for (let i = 0; i < 6; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
-// ~~~ checks if email exists in users Object  ~~~
-// ~~~ email = req.body.email | object = users ~~~
-const emailExists = (email, object) => {
-  for (let key in object) {
-    if (object[key].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
-
-// ~~~          Functn to check if Password exists         ~~~
-// ~~~                      in users Object.                 ~~~
-// ~~~ password = req.body.password | email = req.body.email ~~~
-const correctPassword = (email, password) => {
-  for (const user_id in users) {
-    if (users[user_id].email === email) {
-      if (bcrypt.compareSync(password, users[user_id].password)) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-// ~~~ Function to get user_id from email  ~~~
-//~~~        email = req.body.email        ~~~
-const getIDFromEmail = (email) => {
-  for (const user_id in users) {
-    if (users[user_id].email === email) {
-      return user_id;
-    }
-  }
-};
-
-// ~~~ Function to check if shortURl exists  ~~~
-const shortURLExists = (shortURL) => {
-  for (const key in urlDatabase) {
-    if (key === shortURL) {
-      return true;
-    }
-  }
-  return false;
-};
-
-
-const urlsForUser = (id) => {
-  
-  let results = {
-  };
-
-  for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      results[shortURL] = urlDatabase[shortURL].longURL;
-    }
-  }
-  return results;
-};
 
 
 
