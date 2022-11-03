@@ -47,9 +47,9 @@ const correctPassword = (email, password) => {
 // ~~~      returns user_id from email     ~~~
 //~~~        email = req.body.email        ~~~
 
-const getIDFromEmail = (email) => {
-  for (const user_id in users) {
-    if (users[user_id].email === email) {
+const getIDFromEmail = (email, object) => {
+  for (const user_id in object) {
+    if (object[user_id].email === email) {
       return user_id;
     }
   }

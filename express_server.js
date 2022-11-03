@@ -1,10 +1,10 @@
 // ~~~ Import Functions from helper_functions.js ~~
-const urlsForUser = require('./helper_functions')
-const shortURLExists = require('./helper_functions')
-const getIDFromEmail = require('./helper_functions')
-const correctPassword = require('./helper_functions')
-const emailExists = require('./helper_functions')
-const generateRandomString = require('./helper_functions')
+const { urlsForUser } = require('./helper_functions')
+const { shortURLExists } = require('./helper_functions')
+const { getIDFromEmail } = require('./helper_functions')
+const { correctPassword } = require('./helper_functions')
+const { emailExists } = require('./helper_functions')
+const { generateRandomString } = require('./helper_functions')
 
 // ~~~ Express Server Set Up ~~~
 const express = require("express");
@@ -142,7 +142,7 @@ app.post('/login', (req, res) => {
   if (!correctPassword(req.body.email, req.body.password)) {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
-  const user_id = getIDFromEmail(req.body.email);
+  const user_id = getIDFromEmail(req.body.email,users);
   req.session.user_id = users[user_id];
   res.redirect('/urls');
 });
