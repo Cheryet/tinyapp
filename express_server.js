@@ -75,7 +75,6 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   if (!req.cookies['user_id']){
-    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
     res.redirect('/urls')
   }
   const templateVars = { user: req.cookies['user_id'] };
