@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-const bcrypt = require('bcryptjs')
-const cookieSession = require('cookie-session')
+const bcrypt = require('bcryptjs');
+const cookieSession = require('cookie-session');
 //cosnt morgan = require('morgan')
 
 
@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
-}))
+}));
 //app.use(morgan('dev'))
 
 
@@ -62,7 +62,7 @@ app.get('/urls.json', (req,res) => {
 app.get('/urls', (req, res) => {
   if (!req.session.user_id) {
     const templateVars = {user: false};
-   return res.render('urls_index', templateVars);
+    return res.render('urls_index', templateVars);
   }
   const userURLS = urlsForUser(req.session.user_id.id);
   const templateVars = { urls: userURLS, user: req.session.user_id };
@@ -171,7 +171,7 @@ app.post('/register', (req, res) => {
   if (emailExists(req.body.email, users)) {
     res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
   }
-  const password = req.body.password
+  const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   let id = 'ID' + generateRandomString();
@@ -224,7 +224,7 @@ const emailExists = (email, object) => {
 const correctPassword = (email, password) => {
   for (const user_id in users) {
     if (users[user_id].email === email) {
-      if (bcrypt.compareSync(password, users[user_id].password)){
+      if (bcrypt.compareSync(password, users[user_id].password)) {
         return true;
       }
     }
