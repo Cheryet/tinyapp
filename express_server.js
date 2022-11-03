@@ -166,12 +166,14 @@ app.post('/register', (req, res) => {
   if (emailExists(req.body.email, users)) {
     res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
   }
+  const password = req.body.password
+  const hashedPassword = bcrypt.hashSync(password, 10);
 
   let id = 'ID' + generateRandomString();
   users[id] = {
     id: id,
     email: req.body.email,
-    password: req.body.password
+    password: hashedPassword
   };
 
   res.cookie('user_id', users[id]);
@@ -217,7 +219,7 @@ const emailExists = (email, object) => {
 const correctPassword = (email, password) => {
   for (const user_id in users) {
     if (users[user_id].email === email) {
-      if (users[user_id].password = password) {
+      if (bcrypt.compareSync(users[user_id].password, hashedPassword)){
         return true;
       }
     }
