@@ -54,6 +54,11 @@ app.get('/urls.json', (req,res) => {
 });
 
 app.get('/urls', (req, res) => {
+  if (!req.cookies['user_id']){
+    const templateVars = {user: false}
+    res.render('urls_index', templateVars);
+  }
+  console.log(urlDatabase)
   const userURLS = urlsForUser(req.cookies['user_id'].id);
   const templateVars = { urls: userURLS, user: req.cookies['user_id'] };
   res.render('urls_index', templateVars);
@@ -100,6 +105,7 @@ app.post('/urls/:id/delete', (req, res) => {
   if (!req.cookies['user_id']){
     res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL")
   }
+  console.log(req.params)
   if (urlDatabase[req.params.id].userID !== req.cookies['user_id'].id){
     res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>")
   }
@@ -243,18 +249,13 @@ const shortURLExists = (shortURL) => {
 
 
 const urlsForUser = (id) => {
-  let results = {};
-  let num = 0;
+  
+  let results = {
+  };
 
   for (const shortURL in urlDatabase){
-    num++
     if (urlDatabase[shortURL].userID === id) {
-      results = {
-        num: {
-          shortURL: shortURL,
-          longURL: urlDatabase[shortURL].longURL
-        }  
-      }
+      results[shortURL] = urlDatabase[shortURL].longURL;
     }
   }
   return results;
