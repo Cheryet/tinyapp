@@ -219,7 +219,7 @@ const emailExists = (email, object) => {
 const correctPassword = (email, password) => {
   for (const user_id in users) {
     if (users[user_id].email === email) {
-      if (bcrypt.compareSync(users[user_id].password, hashedPassword)){
+      if (bcrypt.compareSync(password, users[user_id].password)){
         return true;
       }
     }
