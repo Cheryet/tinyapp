@@ -37,22 +37,41 @@ describe('getIDByEmail', function() {
     const expectedUserID = "userRandomID";
     assert.equal(user, expectedUserID)
   });
+
+  it('should return undefined if user doesnt match email', () => {
+    const user = getIDFromEmail("user123@example.com", users)
+    const expectedUserID = undefined;
+
+    assert.equal(user, expectedUserID)
+  })
 });
 
 describe('emailExists', function() {
-  it('should return truthy', function() {
+  it('should return truthy if email exists', function() {
     const email = 'user2@example.com'
    
     assert.isTrue(emailExists(email, users))
   });
+
+  it('should return falsy if email doesnt exist', () => {
+    const email = '123@me.ca'
+
+    assert.isFalse(emailExists(email, users))
+  })
 });
 
 describe('shortURLExists', function() {
-  it('should return truthy', function() {
+  it('should return truthy if the short url does exist', function() {
     const shortURL = "9sm5xK"
    
     assert.isTrue(shortURLExists(shortURL, urlDatabase))
   });
+
+  it('should return falsy if the short URL does not exist', () => {
+    const shortURL = '123456'
+
+    assert.isFalse(shortURLExists(shortURL, urlDatabase))
+  })
 });
 
 describe('urlsForUser', function() {
@@ -65,6 +84,12 @@ describe('urlsForUser', function() {
    
     assert.deepEqual(urlsForUser(userID, urlDatabase), results)
   });
-});
 
+  it('should return empty object if user does not exist', function() {
+    const userID = "123ABC"
+    const results = {};
+   
+    assert.deepEqual(urlsForUser(userID, urlDatabase), results)
+  });
+});
 
