@@ -1,10 +1,10 @@
 // ~~~ Import Functions from helper_functions.js ~~
-const { urlsForUser } = require('./helper_functions')
-const { shortURLExists } = require('./helper_functions')
-const { getIDFromEmail } = require('./helper_functions')
-const { correctPassword } = require('./helper_functions')
-const { emailExists } = require('./helper_functions')
-const { generateRandomString } = require('./helper_functions')
+const { urlsForUser } = require('./helper_functions');
+const { shortURLExists } = require('./helper_functions');
+const { getIDFromEmail } = require('./helper_functions');
+const { correctPassword } = require('./helper_functions');
+const { emailExists } = require('./helper_functions');
+const { generateRandomString } = require('./helper_functions');
 
 // ~~~ Express Server Set Up ~~~
 const express = require("express");
@@ -142,6 +142,7 @@ app.post('/login', (req, res) => {
   if (!correctPassword(req.body.email, req.body.password, users)) {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
+
   const user_id = getIDFromEmail(req.body.email,users);
   req.session.user_id = users[user_id];
   res.redirect('/urls');
@@ -150,13 +151,13 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   req.session = null;
   res.redirect('/login');
-  
 });
 
 app.get('/register', (req, res) => {
   if (req.session.user_id) {
     res.redirect('/urls');
   }
+  
   const templateVars = { user: req.session.user_id };
   res.render('urls_register', templateVars);
 });
@@ -172,8 +173,8 @@ app.post('/register', (req, res) => {
   }
   const password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10);
+  const id = 'ID' + generateRandomString();
 
-  let id = 'ID' + generateRandomString();
   users[id] = {
     id: id,
     email: req.body.email,
