@@ -58,10 +58,6 @@ let users = {
 
 // ~~~ Routes ~~~
 
-app.get('/urls.json', (req,res) => {
-  res.json(urlDatabase);
-});
-
 app.get('/urls', (req, res) => {
   if (!req.session.user_id) {
     const templateVars = {user: false};
