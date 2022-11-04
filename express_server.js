@@ -58,6 +58,8 @@ let users = {
 
 //Routes the initial connection to the login page
 app.get('/', (req, res) => {
+  //delete any cookies
+  req.session = null
   res.redirect('/login')
 })
 
