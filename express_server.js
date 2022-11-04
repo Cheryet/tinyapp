@@ -58,6 +58,11 @@ let users = {
 
 // ~~~ Routes ~~~
 
+
+app.get('/', (req, res) => {
+  res.redirect('/login')
+})
+
 app.get('/urls', (req, res) => {
   if (!req.session.user_id) {
     const templateVars = {user: false};
@@ -65,70 +70,78 @@ app.get('/urls', (req, res) => {
   }
   const userURLS = urlsForUser(req.session.user_id.id, urlDatabase);
   const templateVars = { urls: userURLS, user: req.session.user_id };
-  res.render('urls_index', templateVars);
+  return res.render('urls_index', templateVars);
 });
 
 app.post("/urls", (req, res) => {
   if (!req.session.user_id) {
-    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL");
+    return res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL");
   }
   let id = generateRandomString();
   urlDatabase[id] = { longURL: req.body.longURL, userID: req.session.user_id.id };
-  res.redirect(`/urls/${id}`);
+  return res.redirect(`/urls/${id}`);
 });
 
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   const templateVars = { user: req.session.user_id };
-  res.render("urls_new", templateVars);
+  return res.render("urls_new", templateVars);
 });
 
 app.get('/urls/:id', (req, res) => {
   if (!req.session.user_id) {
-    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL");
+    return res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL");
   }
+  if (urlDatabase[req.params.id] === undefined){
+    return res.send("Error: short URL Id is undefined, please check ID or <a href='/urls'>Go back</a>");
+
+  }
+  if (urlDatabase[req.params.id].userID !== req.session.user_id.id) {
+    return res.send("Error: Only the owner can veiw their URLS, <a href='/urls'>Go back</a>");
+  }
+
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id].longURL, user: req.session.user_id  };
-  res.render('urls_show', templateVars);
+  return res.render('urls_show', templateVars);
 });
 
 app.post('/urls/:id', (req, res) => {
   if (!req.session.user_id) {
-    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL");
+    return res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL");
   }
   if (urlDatabase[req.params.id].userID !== req.session.user_id.id) {
-    res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>");
+    return res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>");
   }
   urlDatabase[req.params.id].longURL = req.body.newLongURL;
-  res.redirect('/urls');
+  return res.redirect('/urls');
 });
 
 app.post('/urls/:id/delete', (req, res) => {
   if (!req.session.user_id) {
-    res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL");
+    return res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to edit a shortened URL");
   }
   if (urlDatabase[req.params.id].userID !== req.session.user_id.id) {
-    res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>");
+    return res.send("Error: Only the User can edit their URLS, <a href='/login'>Go back</a>");
   }
   delete urlDatabase[req.params.id];
-  res.redirect('/urls');
+  return res.redirect('/urls');
 });
 
 app.get("/u/:id", (req, res) => {
   if (!shortURLExists(req.params.id, urlDatabase)) {
-    res.send("Short Url does not exist, <a href='/urls'>Go back</a>");
+    return res.send("Short Url does not exist, <a href='/urls'>Go back</a>");
   }
   const longURL = urlDatabase[req.params.id].longURL;
-  res.redirect(longURL);
+  return res.redirect(longURL);
 });
 
 app.get('/login', (req, res) => {
   if (req.session.user_id) {
-    res.redirect('/urls');
+    return res.redirect('/urls');
   }
   const templateVars = { user: req.session.user_id };
-  res.render('urls_login', templateVars);
+  return res.render('urls_login', templateVars);
 
 
 });
@@ -141,30 +154,31 @@ app.post('/login', (req, res) => {
     return res.status(403).send("Error 403, Invaild Email or Password, <a href='/login'>Go back</a>");
   }
 
+
   const user_id = getIDFromEmail(req.body.email,users);
   req.session.user_id = users[user_id];
-  res.redirect('/urls');
+  return res.redirect('/urls');
 });
 
 app.post('/logout', (req, res) => {
   req.session = null;
-  res.redirect('/login');
+  return res.redirect('/login');
 });
 
 app.get('/register', (req, res) => {
   if (req.session.user_id) {
-    res.redirect('/urls');
+    return res.redirect('/urls');
   }
   const templateVars = { user: req.session.user_id };
-  res.render('urls_register', templateVars);
+  return res.render('urls_register', templateVars);
 });
 
 app.post('/register', (req, res) => {
   if (req.body.email === '' || req.body.password === '') {
-    res.status(400).send("400 Error, Please enter vaild login credentials, <a href='/login'>Go back</a>");
+    return res.status(400).send("400 Error, Please enter vaild login credentials, <a href='/login'>Go back</a>");
   }
   if (emailExists(req.body.email, users)) {
-    res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
+    return res.status(400).send("400 Error, Email already exists <a href='/login'>Go back</a>");
   }
 
   const password = req.body.password;
@@ -178,11 +192,11 @@ app.post('/register', (req, res) => {
   };
 
   req.session.user_id = users[id];
-  res.redirect('/urls');
+  return res.redirect('/urls');
 });
 
 app.get('*', (req, res) => {
-  res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
+  return res.send("Please <a href='/login'>Login</a> or <a href='/register'>register</a> to create a shortened URL")
 });
 
 app.listen(PORT, () => {
