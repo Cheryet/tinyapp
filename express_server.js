@@ -10,7 +10,6 @@ const { generateRandomString } = require('./helper_functions');
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const cookieSession = require('cookie-session');
 
@@ -21,7 +20,6 @@ app.set('view engine', 'ejs');
 
 // ~~~ Middleware Set Up ~~~
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
